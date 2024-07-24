@@ -1,0 +1,15 @@
+import { notFound } from 'next/navigation';
+
+import { getRequestConfig } from 'next-intl/server';
+
+import { ELocaleCode } from './common/enums';
+import { locales } from './i18n-config';
+
+export default getRequestConfig(async ({ locale }) => {
+  if (!locales.includes(locale as any)) notFound();
+
+  return {
+    messages: (await (locale === ELocaleCode.default ? import(`../messages/${ELocaleCode.default}.json`) : import(`../messages/${locale}.json`)))
+      .default
+  };
+});
